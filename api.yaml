@@ -1,0 +1,256 @@
+openapi: '3.0.0'
+info: 
+  title: HCinema
+  description: Online Movie Ticket Booking APIs
+  version: 1.0.0
+  contact: 
+    email: rushiraj.parekh.mi@gmail.com
+    name: Rushiraj Parekh
+  servers: 
+    -url: "http://192.168.1.92:3000"
+  
+schemes: ['http', 'https']
+
+
+# schemas
+components:
+  schemas:
+    Movie:
+      type: object
+      properties:
+        _id: 
+          type: integer
+        id:
+          type: string
+        title: 
+          type: string
+        fullTitle:
+          type: string
+        year:
+          type: integer
+        image:
+          type: string
+        crew: 
+          type: string
+        imDbRating: 
+          type: number
+        imDbRatingCount:
+          type: number
+        releaseStatus:
+          type: boolean
+        trailer:
+          type: string
+        dimension:
+          type: boolean
+    MovieInput:
+      type: object
+      properties:
+        id:
+          type: string
+        title: 
+          type: string
+        fullTitle:
+          type: string
+        year:
+          type: integer
+        image:
+          type: string
+        crew: 
+          type: string
+        imDbRating: 
+          type: number
+        imDbRatingCount:
+          type: number
+        releaseStatus:
+          type: boolean
+        trailer:
+          type: string
+        dimension:
+          type: boolean
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+paths:
+  /api/get-movies:
+    get: 
+      summary: Returns all the movies
+      description: This API gets all the movies' details from database and sends the response JSON
+      responses: 
+        200: 
+          description: success
+          schema: 
+            type: array
+            items: 
+              type: object
+              $ref: '#/components/schemas/Movie'
+
+  ####################################################################
+  /api/get-movie/{id}:
+    get:
+      summary: Returns a movie
+      descrioption: This API gets a single movie's details from database and sends the response JSON
+      parameters:
+        - name: id 
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        200: 
+          description: success
+          schema: 
+            type: object
+            properties:
+              data:
+                type: object
+                properties:
+                  movie:
+                    type: object
+                    $ref: '#/components/schemas/Movie'
+              meta:
+                type: object
+                properties:
+                  code: 
+                    type: integer
+                  message: 
+                    type: string
+
+  ####################################################################
+  /api/admin/add-movie:
+    post:
+      summary: Add movie
+      descrioption: This API add new movie to the database
+      requestBody: 
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MovieInput'
+      responses:
+        200: 
+          description: success
+
+  ####################################################################
+  /api/signup:
+    post:
+      summary: Create new user
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                firstName: 
+                  type: string
+                  required: true
+                lastName:
+                  type: stirng
+                  required: true
+                email: 
+                  type: string
+                  required: true
+                password: 
+                  type: string
+                  required: true
+                image:
+                  type: string
+                  format: binary
+                  required: true
+      responses:
+        200: 
+          description: success
+
+  ####################################################################
+  /api/login:
+    post:
+      summary: Login
+      requestBody: 
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                email: 
+                  type: string
+                  required: true
+                password:
+                  type: string
+                  required: true
+      responses:
+        200: 
+          description: success
+
+  ####################################################################
+  /api/get-profile:
+    get:
+      summary: Get User's Profile
+      security:
+        - bearerAuth: [] 
+      responses:
+        200: 
+          description: success
+
+  ####################################################################
+  /api/change-password:
+    put:
+      summary: Change user's password]
+      security:
+        - bearerAuth: []
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                oldPassword: 
+                  type: string
+                  required: true
+                newPassword:
+                  type: string
+                  required: true
+      responses:
+        200: 
+          description: success
+
+  ####################################################################
+  /api/admin/add-screen:
+    post:
+      summary: Add new theater
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                seats: 
+                  type: string
+                  required: true
+      responses:
+        200:
+          description: success
+
+  ####################################################################
+  /api/admin/edit-screen/{id}:
+    put:
+      summary: Edit existing theater
+      parameters:
+        - name: id 
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                seats:
+                  type: string
+                  required: true
+      responses:
+        200:
+          description: success
