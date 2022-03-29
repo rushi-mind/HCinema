@@ -8,7 +8,7 @@ const swaggerDocs = YAML.load('./api.yaml');
 const cors = require('cors');
 
 const index = require('./routes');
-
+// ANY CHANGES
 app.use(cors({
     origin: '*'
 }));
