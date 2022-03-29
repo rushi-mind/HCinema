@@ -12,7 +12,7 @@ const index = require('./routes');
 app.use(cors({
     origin: '*'
 }));
-
+// test
 app.use(express.static('public'));
 
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocs));
